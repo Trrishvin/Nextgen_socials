@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TheCoreFive | Urban Eats</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --primary: #e67e22; --bg: #0a0a0a; --glass: rgba(255, 255, 255, 0.03); --glass-border: rgba(255, 255, 255, 0.1); --text: #ffffff; }
+    [data-theme="light"] { --bg: #f0f0f0; --glass: rgba(0, 0, 0, 0.05); --glass-border: rgba(0, 0, 0, 0.1); --text: #0a0a0a; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; transition: background 0.5s ease; }
+    #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease; }
+    .loader-logo-img { width: 100px; height: 100px; border-radius: 50%; margin-bottom: 20px; border: 2px solid var(--primary); animation: pulse 2s infinite; }
+    .loader-circle { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } }
+    nav { position: fixed; width: 100%; padding: 25px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 100; backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); }
+    .logo-img { width: 45px; height: 45px; border-radius: 50%; filter: drop-shadow(0 0 8px var(--primary)); }
+    #theme-btn { font-size: 1.5rem; background: none; border: none; color: var(--primary); padding: 10px; cursor: pointer; }
+    .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; overflow: hidden; }
+    .parallax-text { font-family: 'Syncopate', sans-serif; font-size: clamp(4rem, 15vw, 12rem); line-height: 0.8; opacity: 0.1; position: absolute; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px var(--text); z-index: 1; }
+    .hero-main { z-index: 2; }
+    .hero-main h1 { font-size: clamp(2.5rem, 8vw, 5rem); text-transform: uppercase; letter-spacing: -2px; }
+    .hero-main span { color: var(--primary); }
+    .container { padding: 80px 10%; position: relative; z-index: 5; }
+    .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 40px; padding: 50px; margin-bottom: 80px; }
+    .badge { background: #27ae60; padding: 8px 18px; border-radius: 100px; font-weight: bold; font-size: 0.7rem; color: white; display: inline-block; margin-bottom: 10px; }
+    .social-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+    .social-box { background: var(--glass); border: 1px solid var(--glass-border); padding: 35px; border-radius: 30px; height: 320px; display: flex; flex-direction: column; justify-content: space-between; transition: 0.4s; }
+    .social-box:hover { border-color: var(--primary); transform: translateY(-10px); background: rgba(230, 126, 34, 0.05); }
+    .social-box i { font-size: 2.8rem; color: var(--primary); }
+    .social-box a { color: var(--text); text-decoration: none; font-weight: bold; border-bottom: 2px solid var(--primary); align-self: flex-start; padding-bottom: 5px; cursor: pointer; }
+    #backToTop { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--primary); color: white; border: none; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 999; opacity: 0; visibility: hidden; transition: 0.4s; box-shadow: 0 10px 20px rgba(0,0,0,0.3); cursor: pointer; }
+    #backToTop.show { opacity: 1; visibility: visible; }
+    footer { padding: 80px 5%; text-align: center; border-top: 1px solid var(--glass-border); }
+    .footer-logo { width: 60px; height: 60px; margin-bottom: 15px; border-radius: 50%; }
+    #clock { font-family: 'Syncopate', sans-serif; font-size: 0.8rem; color: var(--primary); letter-spacing: 2px; margin-top: 15px; }
+    .btn-main { margin-top: 25px; padding: 18px 35px; background: var(--primary); color: white; border: none; border-radius: 100px; font-weight: 700; text-transform: uppercase; transition: 0.3s; cursor: pointer; text-decoration: none; display: inline-block; }
+    .hidden-loader { opacity: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <img src="logo.jpg" class="loader-logo-img">
+    <div class="loader-circle"></div>
+    <h2 style="margin-top: 20px; letter-spacing: 10px; color: white; font-size: 0.9rem;">THE CORE FIVE</h2>
+  </div>
+  <nav><img src="logo.jpg" class="logo-img"><button id="theme-btn">☀️</button></nav>
+  <button id="backToTop" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
+
+  <section class="hero">
+    <div class="parallax-text" id="p1">EATS EXPLORE URBAN TASTE</div>
+    <div class="hero-main">
+      <h1>THE CORE <span>FIVE</span></h1>
+      <p style="letter-spacing: 5px; opacity: 0.7;">BEYOND THE ORDINARY REVIEW</p>
+      <button class="btn-main" onclick="document.getElementById('blog-section').scrollIntoView({behavior: 'smooth'})">READ REVIEW</button>
+    </div>
+    <div class="parallax-text" style="bottom: 20%; right: -10%;" id="p2">REVIEWS CRITIQUE FLAVOR CITY</div>
+  </section>
+
+ <div class="container" id="blog-section">
+    <div class="glass-card" style="text-align: center; border: 2px solid var(--primary); background: rgba(230, 126, 34, 0.05);">
+      <span class="badge">LATEST ENTRY: MOUSSE CAKE MOMENT</span>
+      <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); margin: 20px 0;">The Review Vault</h2>
+      <p style="font-size: 1.2rem; opacity: 0.8; max-width: 700px; margin: 0 auto 30px;">
+        From the crispy layers of Fried Nation to the soul-satisfying taste of homemade Prawn Fry. Explore our full archive of urban taste tests.
+      </p>
+      <a href="good reviews.html" class="btn-main" style="text-decoration: none; display: inline-block;">Enter the Archive</a>
+    </div>
+
+    <div class="social-grid" style="margin-top: 50px;">
+      </div>
+</div>
+    <div class="social-grid">
+      <div class="social-box"><i class="fab fa-instagram"></i><h3>INSTAGRAM</h3><p>Cinematic snapshots of the city's best plates.</p><a href="https://www.instagram.com/p/DTanASSCHhO/" target="_blank">VIEW</a></div>
+      <div class="social-box"><i class="fab fa-youtube"></i><h3>YOUTUBE</h3><p>High-production food tours and kitchen raids.</p><a href="https://youtube.com/shorts/TI6-XvMByfo" target="_blank">WATCH</a></div>
+      <div class="social-box"><i class="fab fa-linkedin-in"></i><h3>LINKEDIN</h3><p>The business and tech behind hospitality.</p><a href="https://www.linkedin.com/posts/thecore-four-0737203a5_as-you-pass-the-sgnp-gates-in-2026-the-vibrant-activity-7416537096653398016--GCH" target="_blank">NETWORK</a></div>
+      <div class="social-box"><i class="fab fa-reddit-alien"></i><h3>REDDIT</h3><p>Unfiltered community debates on hidden gems.</p><a href="https://www.reddit.com/r/indiasocialcirclejerk/s/pS5dmLAAQ5" target="_blank">DISCUSS</a></div>
+      <div class="social-box"><i class="fab fa-pinterest-p"></i><h3>PINTEREST</h3><p>Curated aesthetics and mood boards for foodies.</p><a href="https://pin.it/LYTw9q2bM" target="_blank">INSPIRE</a></div>
+      <div class="social-box"><i class="fab fa-facebook-f"></i><h3>FACEBOOK</h3><p>Local community news and upcoming alerts.</p><a href="https://www.facebook.com/share/14LfS7sjnAa/" target="_blank">CONNECT</a></div>
+      <div class="social-box"><i class="fa-solid fa-at"></i><h3>THREADS</h3><p>Real-time spicy takes on daily snacks.</p><a href="https://www.threads.com/@thecorefour1357" target="_blank">JOIN</a></div>
+      <div class="social-box"><i class="fa-brands fa-x-twitter"></i><h3>X / TWITTER</h3><p>Instant alerts and breaking food news.</p><a href="https://x.com/i/status/2010773042587443225" target="_blank">FOLLOW</a></div>
+    </div>
+  </div>
+
+  <footer>
+    <img src="logo.jpg" class="footer-logo">
+    <p>© 2026 THE CORE FIVE. CURATING TASTE GLOBALLY.</p>
+    <div id="clock"></div>
+  </footer>
+
+  <script>
+    const btt = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      const sc = window.pageYOffset;
+      document.getElementById('p1').style.transform = `translateX(${sc * 0.4}px)`;
+      document.getElementById('p2').style.transform = `translateX(-${sc * 0.4}px)`;
+      if (sc > 400) { btt.classList.add('show'); } else { btt.classList.remove('show'); }
+    });
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    const themeBtn = document.getElementById('theme-btn');
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') !== 'light';
+      document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      themeBtn.innerText = isDark ? '🌙' : '☀️';
+    });
+    function updateClock() {
+      const now = new Date();
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      document.getElementById('clock').innerText = now.toLocaleDateString('en-US', options).toUpperCase();
+    }
+    setInterval(updateClock, 1000); updateClock();
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => document.getElementById('loader').classList.add('hidden-loader'), 1000);
+      }, 1500);
+    };
+  </script>
+</body>
+</html>
